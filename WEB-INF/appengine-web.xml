@@ -1,0 +1,36 @@
+<!-- Generated from app.yaml. Do not edit. -->
+<appengine-web-app xmlns='http://appengine.google.com/ns/1.0'>
+  <application>sib-geekfest</application>
+  <version>1</version>
+  <public-root>/pub</public-root>
+  <static-files>
+    <include path='/*'/>
+    <include path='/pub/**'/>
+    <include path='/errors/*'/>
+    <exclude path='README.md'/>
+    <exclude path='/*.cmd'/>
+    <exclude path='/.stuff/**'/>
+  </static-files>
+  <resource-files>
+    <exclude path='README.md'/>
+    <exclude path='/*.cmd'/>
+    <exclude path='/.stuff/**'/>
+  </resource-files>
+  <ssl-enabled>true</ssl-enabled>
+  <precompilation-enabled>true</precompilation-enabled>
+  <threadsafe>true</threadsafe>
+  <code-lock>false</code-lock>
+  <sessions-enabled>true</sessions-enabled>
+  <system-properties>
+    <property name='java.util.logging.config.file' value='WEB-INF/logging.properties'/>
+  </system-properties>
+  <inbound-services>
+  </inbound-services>
+  <warmup-requests-enabled>true</warmup-requests-enabled>
+  <static-error-handlers>
+    <handler file='/errors/default.html'/>
+    <handler file='/errors/overquota.html' error-code='over_quota'/>
+    <handler file='/errors/dosdenial.html' error-code='dos_api_denial'/>
+    <handler file='/errors/timeout.html' error-code='timeout'/>
+  </static-error-handlers>
+</appengine-web-app>
