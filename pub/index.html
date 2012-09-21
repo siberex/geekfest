@@ -12,6 +12,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
   <title>Geekfest photostream</title>
 
@@ -39,8 +40,21 @@
   <link rel="stylesheet" href="/css/base.css" type="text/css" />
   <link rel="stylesheet" href="/css/page.css" type="text/css" />
 
+  <link rel="stylesheet" href="/css/elastislide.css" type="text/css" />
+  <!-- link rel="stylesheet" href="/css/jquery.lightbox-0.5.css" type="text/css" / -->
+  <!-- link rel="stylesheet" href="jquery.darkbox.css" -->
+  <!--[if lt IE 9]><link rel="stylesheet" href="jquery.darkbox.ie.css"><![endif]-->
+
   <script src="http://yandex.st/jquery/1.8.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
+
+  <!-- script src="/js/jquery.lightbox-0.5.min.js"></script -->
+  <script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
+  <script type="text/javascript" src="/js/jquery.elastislide.js"></script>
+
+  <!-- script type="text/javascript" src="/js/jquery.darkbox-custom.js"></script -->
+
+  <script src="/js/photostream.js"></script>
 
   <script src="/js/hide-address-bar.js"></script>
 
@@ -52,12 +66,42 @@
 </head>
 <body>
 
-<div id="wrapper">
 
+<!--div id="photo">
+	
+</div-->
+
+<!-- table class="renderer">
+  <tr>
+    <td id="prev"></td>
+    <td id="wrapper">
+	  <a href="http://geekfest.ru/"><img src="/img/title.png" alt="Geekfest" /></a>
+	</td>
+    <td id="next"></td>
+  </tr>
+</table -->
+<div id="wrapper">
+	<a href="http://geekfest.ru/"><img src="/img/title.png" alt="Geekfest" /></a>
+	<a href="#" id="prev">←</a>
+	<a href="#" id="next">→</a>
 </div>
 
+
+<div id="navigation">
+  <div id="carousel" class="es-carousel-wrapper">
+    <div class="es-carousel">
+      <ul id="container"></ul>
+    </div>
+  </div>
+</div>
+
+<script>document.write('<script src="'+flickrUrl + '&per_page=' + perPage + '&rand='+parseInt(Math.random()*100500)+'"><\/script>')</script>
+
+
+
+
 <div class="footer"><span class="left-arrow">←</span><a href="http://www.sib.li">Stephan Legachev</a></div>
-<div class="powered">Powered by <img class="icon-gae" src="/ico/appengine.png" alt="App Engine icon" width="16" height="16"/> Google App Engine</div>
+<div class="powered">Powered by <img class="icon-gae" src="/ico/appengine.png" alt="Google App Engine" title="Google App Engine" width="16" height="16"/> & <img class="icon-flickr" src="/ico/flickr.png" alt="Flickr" title="Flickr" width="16" height="16"/></div>
 
 <!-- Yandex.Metrika counter --><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter17184670 = new Ya.Metrika({id:17184670, enableAll: true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/17184670" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
 </body>

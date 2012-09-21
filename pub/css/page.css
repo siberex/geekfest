@@ -9,10 +9,6 @@ body {
 	padding: 0;
 }
 
-li {
-    margin: 0.8em;
-}
-
 h1, h2, h3 {
 	font-family: 'PT Sans Caption', Geneva, Arial, Helvetica, sans-serif;
 	font-size: 14pt;
@@ -21,10 +17,132 @@ h1, h2, h3 {
 }
 
 
-#wrapper {
-	/* width: 520px;
-	margin: 0 auto; */
+html, body {
+    width: 100%;
+    background-color: #AAA;
+    text-shadow: #FFF 0px 1px;
+    margin: 0;
 }
+
+html {
+    height: 100%;
+}
+
+body {
+    background: #AAA;
+    background: -moz-radial-gradient(30% 30px, circle farthest-side, #fff, #AAA); /* FF3.6+ */
+    background: -webkit-gradient(radial, 30% 30px, 0, 30% 30px, 100%,
+                                 color-stop(0%,#FFF), color-stop(100%,#AAA)); /* Chrome, Safari4+ */
+    background: -webkit-radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* Chrome 10+, Safari 5.1+ */
+    background: -o-radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* Opera 12 */
+    background: -ms-radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* IE10 */
+    background: radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* CSS3 */
+	min-height: 100%;
+}
+
+.x-unselectable {
+    user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: -moz-none;
+    -webkit-user-select: none;
+    cursor: default;
+}
+
+#wrapper {
+	width: 250px;
+	margin: 0 auto;
+	vertical-align: middle;
+	text-align: center;
+	position: relative;
+	background: url('/images/lightbox-ico-loading.gif') no-repeat center;
+}
+
+#wrapper img {
+	display: none;
+}
+/*#wrapper img {
+	padding-top: 60px;
+	padding-bottom: 30px;
+}*/
+
+/*
+#flickr {
+	margin: 0 auto;
+	width: 310px;
+}
+*/
+
+/*
+#flickr a {
+	display: block;
+	float: left;
+	width: 75px;
+	height: 75px;
+	border: none;
+	padding: 0;
+	margin: 0 1px 1px 0;
+}
+*/
+
+.renderer {
+	width: 100%;
+	height: 100%;
+}
+.renderer td {
+	width: 33%;
+	height: 100%;
+}
+/*#wrapper {
+	vertical-align: middle;
+	text-align: center;
+	display: table-cell;
+	position: relative;
+}*/
+/*#wrapper img {
+	max-height: 100%;
+	max-width: 100%;
+}*/
+
+
+
+#prev, #next {
+    background: transparent;
+	display: none; /* !!! */
+
+	width: 35%;
+	height: 100%;
+
+	position: absolute;
+	opacity: 0.3;
+	
+    text-decoration: none;
+    text-align: center;
+    font-size: 80px;
+    line-height: 5em;
+
+	color: transparent;
+	text-shadow: none;
+}
+#prev {
+	top: 0;
+	left: 0;
+}
+#next {
+	top: 0;
+	right: 0;
+}
+
+/****
+#next:hover,
+#prev:hover {
+    background: #222222;
+    color: white;
+	text-shadow: 0 1px #FFF;
+}
+****/
+
+
 #body {
 	float: left;
 	margin-top: 80px;
@@ -43,16 +161,36 @@ h1, h2, h3 {
 .clear {
 	clear: both;
 	font-size: 0;
-	overflow: hidden; /* тройной презерватив для IE */
+	overflow: hidden; /* Tripple condom for IE */
+}
+
+#navigation {
+	height: 76px;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+}
+
+.left-arrow {
+    padding-right: 3px;
+}
+.footer {
+    position: absolute;
+    top: 5px;
+	left: 5px;
 }
 
 .icon-gae {
     vertical-align: -3px;
 }
-
+.icon-flickr {
+    vertical-align: -4px;
+	padding-left: 1px;
+}
 .powered {
-    position: fixed;
-    bottom: 2px;
-    right: 4px;
-    text-shadow: #EEE 0px 1px;
+	color: #444;
+    position: absolute;
+    top: 5px;
+    right: 7px;
+    text-shadow: #DDD 0px 1px;
 }
