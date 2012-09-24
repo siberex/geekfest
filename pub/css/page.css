@@ -216,4 +216,7 @@ body {
 	border-radius : 15px;
 	background	: #000 url(/img/spinner.png) 24px 24px no-repeat;
 	opacity		: 0.5;
+	-webkit-box-shadow : 0 0 20px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow : 0 0 20px rgba(0, 0, 0, 0.4);
+	box-shadow	: 0 0 20px rgba(0, 0, 0, 0.4);
 }
