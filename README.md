@@ -1,11 +1,11 @@
-Geekfest
-========
+Photostream live
+================
 
-Live project: http://geekfest.sib.li
+Live photostream from Picasa or Flickr album.
+
+iPhone/iPad-ready.
 
 
-
-Geekfest 2012 conference photostream
-
-Conference info here: http://geekfest.ru
+Photostream from GeekFest 2012 conference: http://geekfest.sib.li
+( additional info here: http://geekfest.ru )
 
