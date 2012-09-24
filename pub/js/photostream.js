@@ -330,10 +330,15 @@ function getImgObj(p) {
 
 
 
-
-
-
-window.timerSpinner = null;
+$(function() {
+    $spinner = $('#spinner');
+    var spinnerStep = 0;
+    window.timerSpinner = setInterval( function () {
+        var shift = 24 - ( 56 * spinnerStep );
+        $spinner.css( 'background-position', '24px ' + shift + 'px' );
+        spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
+    }, 90 );
+}); // document.ready
 
 /**
  * Show loading spinner.
