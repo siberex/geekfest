@@ -326,3 +326,25 @@ function getImgObj(p) {
     };
     return im;
 } // getImgObj
+
+
+
+
+
+
+
+window.timerSpinner = null;
+
+/**
+ * Show loading spinner.
+ */
+function showSpinner() {
+
+} // showSpinner
+
+/**
+ * Hide loading spinner.
+ */
+function hideSpinner() {
+
+} // hideSpinner

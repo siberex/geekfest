@@ -19,6 +19,7 @@ h1, h2, h3 {
 
 html, body {
     width: 100%;
+	min-height: 480px;
     background-color: #AAA;
     text-shadow: #FFF 0px 1px;
     margin: 0;
@@ -38,6 +39,10 @@ body {
     background: -ms-radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* IE10 */
     background: radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* CSS3 */
 	min-height: 100%;
+}
+
+body {
+	min-height: 480px;
 }
 
 .x-unselectable {
@@ -193,4 +198,13 @@ body {
     top: 5px;
     right: 7px;
     text-shadow: #DDD 0px 1px;
+}
+
+
+
+
+
+.spinner {
+
+
 }
