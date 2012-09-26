@@ -14,6 +14,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
+	<!-- Check it! -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
   <title>Geekfest photostream</title>
 
   <meta name="Description" content="Geekfest 2012 conference live photostream" />
@@ -40,24 +45,15 @@
   <link rel="stylesheet" href="/css/base.css" type="text/css" />
   <link rel="stylesheet" href="/css/page.css" type="text/css" />
 
-  <link rel="stylesheet" href="/css/elastislide.css" type="text/css" />
-  <!-- link rel="stylesheet" href="/css/jquery.lightbox-0.5.css" type="text/css" / -->
-  <!-- link rel="stylesheet" href="jquery.darkbox.css" -->
-  <!--[if lt IE 9]><link rel="stylesheet" href="jquery.darkbox.ie.css"><![endif]-->
-
   <script src="http://yandex.st/jquery/1.8.1/jquery.min.js"></script>
   <script>window.jQuery || document.write('<script src="/js/jquery.min.js"><\/script>')</script>
 
-  <!-- script src="/js/jquery.lightbox-0.5.min.js"></script -->
-  <script type="text/javascript" src="/js/jquery.easing.1.3.js"></script>
-  <script type="text/javascript" src="/js/jquery.elastislide.js"></script>
-
-  <!-- script type="text/javascript" src="/js/jquery.darkbox-custom.js"></script -->
+  <script type="application/javascript" src="/js/iscroll.js"></script>
 
   <script src="/js/photostream.js"></script>
 
-  <script src="/js/hide-address-bar.js"></script>
 
+  <script src="/js/hide-address-bar.js"></script>
   <!-- Should be loaded AFTER jQuery -->
   <!--[if lt IE 9]>
     <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
@@ -67,19 +63,6 @@
 <body>
 
 
-<!--div id="photo">
-	
-</div-->
-
-<!-- table class="renderer">
-  <tr>
-    <td id="prev"></td>
-    <td id="wrapper">
-	  <a href="http://geekfest.ru/"><img src="/img/title.png" alt="Geekfest" /></a>
-	</td>
-    <td id="next"></td>
-  </tr>
-</table -->
 <div id="spinner"></div>
 
 <div id="wrapper">
@@ -90,10 +73,8 @@
 
 
 <div id="navigation">
-  <div id="carousel" class="es-carousel-wrapper">
-    <div class="es-carousel">
-      <ul id="container"></ul>
-    </div>
+  <div id="iscroll">
+    <ul id="container" style="width: 6840px; display: block; margin-left: 0px;"></ul>
   </div>
 </div>
 
@@ -105,6 +86,18 @@
 <div class="footer"><span class="left-arrow">←</span><a href="http://www.sib.li">Stephan Legachev</a></div>
 <div class="powered">Powered by <img class="icon-gae" src="/ico/appengine.png" alt="Google App Engine" title="Google App Engine" width="16" height="16"/> & <img class="icon-flickr" src="/ico/flickr.png" alt="Flickr" title="Flickr" width="16" height="16"/></div>
 
-<!-- Yandex.Metrika counter --><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter17184670 = new Ya.Metrika({id:17184670, enableAll: true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/17184670" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
+<!-- Yandex.Metrika counter --<script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter17184670 = new Ya.Metrika({id:17184670, enableAll: true}); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/17184670" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
 </body>
 </html>
+
+<!--
+TODOs
+
+fix scroller
+
+fix loading first
+
+replace yandex.metrika!
+update title, meta
+check viewport metas
+-->

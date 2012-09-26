@@ -125,31 +125,25 @@ function showImage(id, prevId, nextId) {
 
 $(function() {
     resetSizes();
-    $('#carousel').elastislide({
-        imageW 		: 75,
-        minItems	: 3,
-        margin      : 1,
-        border		: 0,
-        onClick  :  function( $item ) {
-            // Fires on initially loaded items.
 
-            var id = $item.children('a:first').attr('id');
-            var prevId = null;
-            var nextId = null;
-
-            var $prev = $item.prev();
-            if ($prev) {
-                prevId = $prev.children('a:first').attr('id');
-            }
-
-            var $next = $item.next();
-            if ($next) {
-                nextId = $next.children('a:first').attr('id');
-            }
-            
-            showImage(id, prevId, nextId);
-        }
+    /*    
+    window.navScroll = new iScroll('iscroll', {
+        vScroll: false
+        ,vScrollbar: false
     });
+    */
+        
+
+    /*
+    // Animate loading spinner.
+    $spinner = $('#spinner');
+    var spinnerStep = 0;
+    window.timerSpinner = setInterval( function () {
+        var shift = 24 - ( 56 * spinnerStep );
+        $spinner.css( 'background-position', '24px ' + shift + 'px' );
+        spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
+    }, 90 );
+    */
 
     $(document).on('click', '#container a', function(e) {
         // Fires on dynamically loaded items.
@@ -180,6 +174,9 @@ $(function() {
 
     // Autoupdating
     window.loadNew = setInterval(function() {
+
+        return false;
+
         var rand = parseInt(Math.random()*100500);
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
             // New data
@@ -216,7 +213,10 @@ $(function() {
             
             var $items  = $(items);
             $('#container').prepend($items);
-            $('#carousel').elastislide( 'add', $items );
+            setTimeout(function () {
+                window.navScroll.refresh();
+            }, 0);
+            //$('#carousel').elastislide( 'add', $items );
             
             if ($('#wrapper a:first').attr('id') == 'I' + first.id )
                 showImage(newIm[0].id, null, newIm[1] ? newIm[1].id : null);
@@ -234,41 +234,49 @@ $(function() {
 
 }); // document.ready
 
-    window.loadMore = function(page) {
-        setTimeout(function() {
-            var rand = parseInt(Math.random()*100500);
-            $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + page + '&rand='+rand+'&jsoncallback=?', function(data) {
-                // More data
 
-                if (!data.photos || !data.photos.photo || !data.photos.photo.length)
-                    return false;
 
-                var items = '';
-                $.each(data.photos.photo, function(i, p) {
-                    if ( typeof imagesLoadedHash[p.id] == 'object' )
-                        return 1;
+window.loadMore = function(page) {
 
-                    var im = getImgObj(p);
+    return false;
 
-                    imagesLoaded.push(im);
-                    imagesLoadedHash[p.id] = im;
+    setTimeout(function() {
+        var rand = parseInt(Math.random()*100500);
+        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + page + '&rand='+rand+'&jsoncallback=?', function(data) {
+            // More data
 
-                    var strEl = getThumbStr(im);
-                    items += strEl;
-                }); // each
-                
-                var $items  = $(items);
-                $('#container').append($items);
-                $('#carousel').elastislide( 'add', $items );
+            if (!data.photos || !data.photos.photo || !data.photos.photo.length)
+                return false;
 
-                if (data.photos.page < data.photos.pages) {
-                    //data.photos.page
-                    loadMore(++data.photos.page);
-                }
+            var items = '';
+            $.each(data.photos.photo, function(i, p) {
+                if ( typeof imagesLoadedHash[p.id] == 'object' )
+                    return 1;
 
-            }); // json
-        }, 3000); // setTimeout
-    }; // loadMore
+                var im = getImgObj(p);
+
+                imagesLoaded.push(im);
+                imagesLoadedHash[p.id] = im;
+
+                var strEl = getThumbStr(im);
+                items += strEl;
+            }); // each
+            
+            var $items  = $(items);
+            $('#container').append($items);
+            setTimeout(function () {
+                window.navScroll.refresh();
+            }, 0);
+            //$('#carousel').elastislide( 'add', $items );
+
+            if (data.photos.page < data.photos.pages) {
+                //data.photos.page
+                loadMore(++data.photos.page);
+            }
+
+        }); // json
+    }, 3000); // setTimeout
+}; // loadMore
 
 function jsonFlickrApi(data) {
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
@@ -286,6 +294,13 @@ function jsonFlickrApi(data) {
     }); // each
 
     showImage(imagesLoaded[0].id, null, imagesLoaded[1] ? imagesLoaded[1].id : null);
+
+    /*
+    window.navScroll = new iScroll('iscroll', {
+        vScroll: false
+        ,vScrollbar: false
+    });
+    */
 
     if (data.photos.page < data.photos.pages) {
         loadMore(++data.photos.page);
@@ -330,15 +345,6 @@ function getImgObj(p) {
 
 
 
-$(function() {
-    $spinner = $('#spinner');
-    var spinnerStep = 0;
-    window.timerSpinner = setInterval( function () {
-        var shift = 24 - ( 56 * spinnerStep );
-        $spinner.css( 'background-position', '24px ' + shift + 'px' );
-        spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
-    }, 90 );
-}); // document.ready
 
 /**
  * Show loading spinner.
