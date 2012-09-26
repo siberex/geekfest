@@ -145,43 +145,45 @@ border: 1px solid rgba(255, 255, 255, 0.05);
 
 
 #navigation {
-	height: 76px;
-	width: 100%;
-	position: fixed;
-	bottom: 0;
-
-	background:#aaa;
-	/*overflow:auto;*/
+	height		: 76px;
+	width		: 100%;
+	position	: fixed;
+	bottom		: 0;
+	overflow: hidden;
 }
 
 #iscroll {
-
-	width:2040px;
-	height:100%;
-	/*float:left;
-	padding:0;*/
+	/*width:2040px;*/
+	height		: 76px;
+	border-top		: 1px solid #CCC;
+	/*overflow-x: visible;
+	overflow-y: hidden;*/
+	float: left;
 }
 #iscroll ul {
-	list-style:none;
-	display: block;
+	list-style		: none;
+	text-align		: left;
+	display			: block;
+	float: left;
+
+	width: 200%;
+	/*overflow: visible;*/
+	/*overflow-x: visible;*/
+	height		: 76px;
 	/* float:left; */
-	width:100%;
-	height:100%;
+	/*width:100%;
 	padding:0;
-	margin:0;
-	text-align:left;
+	margin:0;*/
+
 }
 #iscroll ul li {
-	border-right: 1px solid #CCC;
-	border-top: 1px solid #CCC;
-	width: 75px;
-	height: 75px;
-	float: left;
-	display:block;
-	vertical-align:middle;
+	border-right	: 1px solid #CCC;
+	width			: 75px;
+	height			: 75px;
+	float			: left;
+	display			: block;
+	vertical-align	: middle;
 
-	background-color:#fafafa;
-	font-size:14px;
 }
 
 
