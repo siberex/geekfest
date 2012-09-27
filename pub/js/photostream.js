@@ -348,7 +348,9 @@ function updateNavigation() {
     } else {
         window.navScroll = new iScroll('iscroll', {
             vScroll: false
-            ,vScrollbar: false
+           ,vScrollbar: false
+           ,wheelHorizontal: true 
+            //,scrollbarClass: 'iScrollbar'
         });
     }
 
