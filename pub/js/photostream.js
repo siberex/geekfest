@@ -351,6 +351,10 @@ function updateNavigation() {
            ,vScrollbar: false
            ,wheelHorizontal: true
             //,scrollbarClass: 'iScrollbar'
+           ,onBeforeScrollStart : function(e) {
+                console.debug('onBeforeScrollStart fired!');
+                e.preventDefault();
+           }
         });
     }
 
