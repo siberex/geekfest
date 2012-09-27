@@ -275,7 +275,7 @@ function jsonFlickrApi(data) {
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
         return false;
 
-    console.debug(data);
+    //console.debug(data);
 
     $.each(data.photos.photo, function(i, p) {
         var im = getImgObj(p);
