@@ -129,7 +129,6 @@ $(function() {
     updateNavigation();
         
 
-    /*
     // Animate loading spinner.
     $spinner = $('#spinner');
     var spinnerStep = 0;
@@ -138,10 +137,13 @@ $(function() {
         $spinner.css( 'background-position', '24px ' + shift + 'px' );
         spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
     }, 90 );
-    */
+
 
     $(document).on('click', '#container a', function(e) {
         // Fires on dynamically loaded items.
+
+        if (window.navScroll.scrollingInProgress)
+            return false;
 
         var $item = $(this);
         var id = $item.attr('id');
@@ -351,10 +353,16 @@ function updateNavigation() {
            ,vScrollbar: false
            ,wheelHorizontal: true
             //,scrollbarClass: 'iScrollbar'
-           ,onBeforeScrollStart : function(e) {
-                console.debug('onBeforeScrollStart fired!');
-                e.preventDefault();
-           }
+           ,onScrollMove : function(e) {
+                this.scrollingInProgress = true;
+            }
+           ,onScrollEnd: function() {
+                var that = this;
+                setTimeout(function () {
+                    that.scrollingInProgress = false;
+                }, 10);
+
+            }
         });
     }
 
