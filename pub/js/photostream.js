@@ -126,12 +126,7 @@ function showImage(id, prevId, nextId) {
 $(function() {
     resetSizes();
 
-    /*    
-    window.navScroll = new iScroll('iscroll', {
-        vScroll: false
-        ,vScrollbar: false
-    });
-    */
+    updateNavigation();
         
 
     /*
@@ -264,9 +259,9 @@ window.loadMore = function(page) {
             
             var $items  = $(items);
             $('#container').append($items);
-            setTimeout(function () {
-                window.navScroll.refresh();
-            }, 0);
+
+            updateNavigation();
+
             //$('#carousel').elastislide( 'add', $items );
 
             if (data.photos.page < data.photos.pages) {
@@ -295,12 +290,7 @@ function jsonFlickrApi(data) {
 
     showImage(imagesLoaded[0].id, null, imagesLoaded[1] ? imagesLoaded[1].id : null);
 
-    /*
-    window.navScroll = new iScroll('iscroll', {
-        vScroll: false
-        ,vScrollbar: false
-    });
-    */
+    updateNavigation();
 
     if (data.photos.page < data.photos.pages) {
         loadMore(++data.photos.page);
@@ -343,6 +333,26 @@ function getImgObj(p) {
 } // getImgObj
 
 
+
+function updateNavigation() {
+
+    $container = $("#container");
+
+    var width = $container.children('li').length * 76;
+    $container.width(width);
+
+    if (window.navScroll) {
+        setTimeout(function () {
+            window.navScroll.refresh();
+        }, 0);
+    } else {
+        window.navScroll = new iScroll('iscroll', {
+            vScroll: false
+            ,vScrollbar: false
+        });
+    }
+
+} // updateNavigation
 
 
 

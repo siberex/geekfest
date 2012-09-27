@@ -145,36 +145,27 @@ border: 1px solid rgba(255, 255, 255, 0.05);
 
 
 #navigation {
-	height		: 76px;
-	width		: 100%;
-	position	: fixed;
-	bottom		: 0;
-	overflow: hidden;
+	height			: 76px;
+	width			: 100%;
+	position		: fixed;
+	bottom			: 0;
+	overflow		: hidden;
 }
 
 #iscroll {
-	/*width:2040px;*/
-	height		: 76px;
+	height			: 100%;
+	width			: 100%;
 	border-top		: 1px solid #CCC;
-	/*overflow-x: visible;
-	overflow-y: hidden;*/
-	float: left;
 }
 #iscroll ul {
 	list-style		: none;
 	text-align		: left;
 	display			: block;
-	float: left;
 
+	height			: 75px;
 	width: 200%;
-	/*overflow: visible;*/
-	/*overflow-x: visible;*/
-	height		: 76px;
-	/* float:left; */
-	/*width:100%;
-	padding:0;
-	margin:0;*/
-
+	padding: 0;
+	margin: 0;
 }
 #iscroll ul li {
 	border-right	: 1px solid #CCC;
@@ -183,7 +174,6 @@ border: 1px solid rgba(255, 255, 255, 0.05);
 	float			: left;
 	display			: block;
 	vertical-align	: middle;
-
 }
 
 
