@@ -94,12 +94,15 @@ function handleImageLoad() {
     $('#wrapper').width(imgWidth);
     $('#wrapper').height(imgHeight);
     
+    hideSpinner();
     img.show();
 } // handleImageLoad
 
 function showImage(id, prevId, nextId) {
     //console.debug( imagesLoadedHash[id], prevId, nextId );
     
+    showSpinner();
+
     var strEl = getImageStr( imagesLoadedHash[id] );
     var strPrev = '<a href="#" id="prev">←</a>';
 	var strNext = '<a href="#" id="next">→</a>';
@@ -129,14 +132,7 @@ $(function() {
     updateNavigation();
         
 
-    // Animate loading spinner.
-    $spinner = $('#spinner');
-    var spinnerStep = 0;
-    window.timerSpinner = setInterval( function () {
-        var shift = 24 - ( 56 * spinnerStep );
-        $spinner.css( 'background-position', '24px ' + shift + 'px' );
-        spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
-    }, 90 );
+
 
 
     $(document).on('click', '#container a', function(e) {
@@ -279,6 +275,8 @@ function jsonFlickrApi(data) {
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
         return false;
 
+    console.debug(data);
+
     $.each(data.photos.photo, function(i, p) {
         var im = getImgObj(p);
         //var im = getImgObj({"id":"8003949008", "owner":"54758632@N02", "secret":"3c77170355", "server":"8031", "farm":9, "title":"_SIB1270.JPG", "ispublic":1, "isfriend":0, "isfamily":0});
@@ -313,7 +311,7 @@ function getImageStr(im) {
 
 function getThumbStr(im) {
     var strEl = '<li><a href="#" id="'+im.id+'">'
-              + '<img src="'+im.thumb+'" alt="'+im.title+'" />'
+              + '<img src="'+im.thumb+'" alt="'+im.title+'" width="75" height="75" />'
               + '</a></li>';
     return strEl;
 } // getThumb
@@ -337,6 +335,8 @@ function getImgObj(p) {
 
 
 function updateNavigation() {
+    //return false;
+    console.debug('UPDATING');
 
     $container = $("#container");
 
@@ -354,7 +354,8 @@ function updateNavigation() {
            ,wheelHorizontal: true
             //,scrollbarClass: 'iScrollbar'
            ,onScrollMove : function(e) {
-                this.scrollingInProgress = true;
+                if (!this.scrollingInProgress)
+                    this.scrollingInProgress = true;
             }
            ,onScrollEnd: function() {
                 var that = this;
@@ -374,12 +375,26 @@ function updateNavigation() {
  * Show loading spinner.
  */
 function showSpinner() {
+    // Animate loading spinner.
+    $spinner = $('#spinner');
 
+    if (!window.timerSpinner) {
+        var spinnerStep = 0;
+        window.timerSpinner = setInterval( function () {
+            var shift = 24 - ( 56 * spinnerStep );
+            $spinner.css( 'background-position', '24px ' + shift + 'px' );
+            spinnerStep = ( 7 <= spinnerStep ) ? 0 : spinnerStep + 1;
+        }, 90 );
+    }
+
+    $spinner.show();
 } // showSpinner
 
 /**
  * Hide loading spinner.
  */
 function hideSpinner() {
-
+    clearInterval(window.timerSpinner);
+    window.timerSpinner = null;
+    $spinner.hide();
 } // hideSpinner

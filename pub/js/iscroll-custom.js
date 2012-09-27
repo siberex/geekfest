@@ -700,6 +700,7 @@ iScroll.prototype = {
 		if (that.options.wheelHorizontal && that.maxScrollX < 0) {
 			that.scrollTo(deltaX, deltaY, 0);
             e.preventDefault();
+            e.stopPropagation();
             return;
 		}
 		if (that.maxScrollY < 0) {

@@ -162,9 +162,9 @@ body {
 	display			: block;
 
 	height			: 75px;
-	width: 200%;
-	padding: 0;
-	margin: 0;
+	width			: 200%;
+	padding			: 0;
+	margin			: 0;
 }
 #iscroll ul li {
 	border-right	: 1px solid #CCC;
@@ -174,8 +174,19 @@ body {
 	display			: block;
 	vertical-align	: middle;
 }
+#iscroll ul li img {
+	width			: 75px;
+	height			: 75px;
+}
 
-
+#iscroll ul li:hover {
+	border-bottom	: 1px solid yellow;
+	margin-top		: -1px;
+}
+#iscroll ul li.selected {
+	border-bottom	: 1px solid yellow;
+	margin-top		: -1px;
+}
 
 
 
@@ -223,6 +234,7 @@ body {
 	-webkit-box-shadow : 0 0 20px rgba(0, 0, 0, 0.4);
 	-moz-box-shadow : 0 0 20px rgba(0, 0, 0, 0.4);
 	box-shadow	: 0 0 20px rgba(0, 0, 0, 0.4);
+	display		: none;
 }
 
 
