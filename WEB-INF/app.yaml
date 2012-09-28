@@ -1,8 +1,8 @@
 # YAML configuration, appengine-web.xml and web.xml will be automatically derived from app.yaml.
 # http://code.google.com/intl/en/appengine/docs/java/configyaml/appconfig_yaml.html
 
-application: sib-highload
-version: 1
+application: sib-geekfest
+version: 2
 runtime: java
 
 precompilation_enabled: true
