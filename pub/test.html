@@ -19,10 +19,10 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-  <title>Geekfest photostream</title>
+  <title>Highload 2012 live photostream</title>
 
-  <meta name="Description" content="Geekfest 2012 conference live photostream" />
-  <meta name="Keywords" content="geekfest conference photostream" />
+  <meta name="Description" content="Highload conference live photostream" />
+  <meta name="Keywords" content="Highload 2012 IT conference live photo photostream" />
 
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="icon" href="/favicon.png" type="image/png" />
@@ -52,6 +52,12 @@
 
   <script type="application/javascript">
 	$(function() {
+
+	    $container = $("#container");
+
+		var width = $container.children('li').length * 76;
+		$container.width(width);
+
 		var myScroll = new iScroll('iscroll', {
 			vScroll: false
 			,vScrollbar: false
@@ -63,6 +69,8 @@
 
 	}); // document.ready
   </script>
+
+  <script src="/js/hide-address-bar.js"></script>
   <!-- Should be loaded AFTER jQuery -->
   <!--[if lt IE 9]>
     <script src="http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
@@ -73,7 +81,7 @@
 
 <div id="navigation">
     <div id="iscroll">
-    <ul id="container" style="width: 6840px; display: block; margin-left: 0px;">
+    <ul id="container">
 	<li><a id="8005398638" href="#"><img alt="_SIB1503.JPG" src="http://farm9.static.flickr.com/8312/8005398638_1e679509e7_s.jpg"></a></li>
 	<li><a id="8005429249" href="#"><img alt="_SIB1534.JPG" src="http://farm9.static.flickr.com/8035/8005429249_c4b455a6e7_s.jpg"></a></li>
 	<li><a id="8005429692" href="#"><img alt="_SIB1547.JPG" src="http://farm9.static.flickr.com/8295/8005429692_b4fa2d6754_s.jpg"></a></li>

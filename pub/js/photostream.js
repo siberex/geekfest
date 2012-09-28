@@ -215,10 +215,8 @@ $(function() {
                 showImage(newIm[0].id, null, newIm[1] ? newIm[1].id : null);
         }); 
     
-    }, 120000);
-
-
-
+    }, 2000);
+    
 
 
 
@@ -231,7 +229,7 @@ $(function() {
 
 window.loadMore = function(page) {
 
-    return false;
+    //return false;
 
     setTimeout(function() {
         var rand = parseInt(Math.random()*100500);
@@ -268,10 +266,11 @@ window.loadMore = function(page) {
             }
 
         }); // json
-    }, 3000); // setTimeout
+    }, 2000); // setTimeout
 }; // loadMore
 
 function jsonFlickrApi(data) {
+
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
         return false;
 
