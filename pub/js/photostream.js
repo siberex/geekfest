@@ -129,7 +129,7 @@ function showImage(id, prevId, nextId) {
 $(function() {
     resetSizes();
 
-    updateNavigation();
+    //updateNavigation();
         
 
 
@@ -217,27 +217,22 @@ $(function() {
     
     }, 2000);
     
-
-
-
-
-
-
-}); // document.ready
-
-
-
-window.loadMore = function(page) {
+//window.loadMore = function(page) {
 
     //return false;
 
-    setTimeout(function() {
+    window.loadMore = setInterval(function() {
+
+        console.log('Loading more...');
+
         var rand = parseInt(Math.random()*100500);
-        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + page + '&rand='+rand+'&jsoncallback=?', function(data) {
+        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&rand='+rand+'&jsoncallback=?', function(data) {
             // More data
 
             if (!data.photos || !data.photos.photo || !data.photos.photo.length)
                 return false;
+
+            console.log('Page: ', window.currentPage, 'of... ', data.photos.pages);
 
             var items = '';
             $.each(data.photos.photo, function(i, p) {
@@ -260,21 +255,41 @@ window.loadMore = function(page) {
 
             //$('#carousel').elastislide( 'add', $items );
 
+            /*
             if (data.photos.page < data.photos.pages) {
                 //data.photos.page
+                console.log('Loading Page ', data.photos.page + 1);
                 loadMore(++data.photos.page);
             }
+            */
 
+            // @todo Check total, not page!
+            if (window.currentPage >= data.photos.pages) {
+                clearInterval(window.loadMore);
+            } else {
+                window.currentPage++;
+            }
         }); // json
-    }, 2000); // setTimeout
-}; // loadMore
+    }, 2000); // setInterval
+//}; // loadMore
+
+
+
+
+
+}); // document.ready
+
+
+
+
 
 function jsonFlickrApi(data) {
+
+    console.debug(data);
 
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
         return false;
 
-    //console.debug(data);
 
     $.each(data.photos.photo, function(i, p) {
         var im = getImgObj(p);
@@ -291,9 +306,16 @@ function jsonFlickrApi(data) {
 
     updateNavigation();
 
-    if (data.photos.page < data.photos.pages) {
+    // Increment page
+    window.currentPage++;
+
+    // not here
+    /*if (data.photos.page < data.photos.pages) {
         loadMore(++data.photos.page);
-    }
+    }*/
+
+
+    console.log('total', data.photos.total);
 
 } // jsonFlickrApi
 
@@ -335,7 +357,7 @@ function getImgObj(p) {
 
 function updateNavigation() {
     //return false;
-    console.debug('UPDATING');
+    console.log('Updating navigation');
 
     $container = $("#container");
 
