@@ -168,7 +168,7 @@ $(function() {
     // Autoupdating
     window.loadNew = setInterval(function() {
 
-        return false;
+        //return false;
 
         var rand = parseInt(Math.random()*100500);
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
@@ -215,7 +215,7 @@ $(function() {
                 showImage(newIm[0].id, null, newIm[1] ? newIm[1].id : null);
         }); 
     
-    }, 2000);
+    }, 120000);
     
 //window.loadMore = function(page) {
 
@@ -264,13 +264,16 @@ $(function() {
             */
 
             // @todo Check total, not page!
+            // @todo Check if loaded less than 25 items in page
+            // Less than {perPage} items can be loaded on last page AND...
+            // Flickr API sometimes gives less than 25 on other pages randomly!
             if (window.currentPage >= data.photos.pages) {
                 clearInterval(window.loadMore);
             } else {
                 window.currentPage++;
             }
         }); // json
-    }, 2000); // setInterval
+    }, 5000); // setInterval
 //}; // loadMore
 
 
