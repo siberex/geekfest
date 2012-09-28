@@ -207,6 +207,10 @@ body {
     vertical-align: -4px;
 	padding-left: 1px;
 }
+.icon-picasa {
+    vertical-align: -3px;
+	padding-left: 2px;
+}
 .powered {
 	color: #444;
     position: absolute;
