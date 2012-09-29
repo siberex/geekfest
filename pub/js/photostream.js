@@ -1,8 +1,10 @@
+/*
+// Flickr API
 var apiKey = 'ce8a98262233b4f93746d846725fe6bf';
 // http://www.adamwlewis.com/articles/what-is-my-flickr-id
 var userId = '54758632@N02';
 var userUrl = 'sibli';
-var setId = '72157631574222249';
+//var setId = '72157631574222249';
 var tag = 'geekfest';
 var perPage = '25';
 
@@ -11,6 +13,34 @@ var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
               + '&tags=' + tag;
 
 var postfix = '_b';
+*/
+
+
+// Picasa web albums API Reference:
+// https://developers.google.com/picasa-web/docs/2.0/reference
+// https://developers.google.com/picasa-web/docs/2.0/developers_guide_protocol#ListAlbumPhotos
+
+// User’s feed: http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com?alt=json&prettyprint=true&fields=entry(title,link)
+// Find album ID:
+// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5791956086207253009
+// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?alt=json&kind=photo
+// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5792040474480061377?kind=photo&thumbsize=72c&alt=json&max-results=2&imgmax=d&prettyprint=true
+
+var userId = '110623282696383295866'; // 'siberex@gmail.com';
+var setId  = '5791956086207253009';
+var setId = '5792040474480061377';
+
+var picasaUrlBase = 'http://picasaweb.google.com/data/feed/api/user/' + userId + '/albumid/' + setId + '?';
+var picasaUrlCallback = '&callback=myFunction';
+var picasaUrlParams = 'kind=photo&thumbsize=75c&alt=json-in-script'
+                    + '&imgmax=d'
+                    + '&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))';
+
+// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?kind=photo&alt=json-in-script&callback=myFunction&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))
+
+
+
+
 
 window.currentPage = 1;
 
@@ -171,6 +201,7 @@ $(function() {
         //return false;
 
         var rand = parseInt(Math.random()*100500);
+        // NB! rand is not necessary, jQuery will pass own random string like: &_=1348912959589
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
             // New data
             
