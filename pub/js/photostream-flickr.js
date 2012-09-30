@@ -3,7 +3,7 @@ var apiKey = 'ce8a98262233b4f93746d846725fe6bf';
 // http://www.adamwlewis.com/articles/what-is-my-flickr-id
 var userId = '54758632@N02';
 var userUrl = 'sibli';
-//var setId = '72157631574222249';
+var setId = '72157631574222249';
 var tag = 'geekfest';
 var perPage = '25';
 
