@@ -13,37 +13,6 @@ var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
 
 var postfix = '_b';
 
-
-
-// Picasa web albums API Reference:
-// https://developers.google.com/picasa-web/docs/2.0/reference
-// https://developers.google.com/picasa-web/docs/2.0/developers_guide_protocol#ListAlbumPhotos
-
-// User’s feed:
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com?alt=json&prettyprint=true&fields=entry(title,link)
-// Find album ID:
-// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5791956086207253009
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?alt=json&kind=photo
-// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5792040474480061377?kind=photo&thumbsize=72c&alt=json&max-results=2&imgmax=d&prettyprint=true
-
-/*
-var userId = '110623282696383295866'; // 'siberex@gmail.com';
-var setId  = '5791956086207253009';
-var setId = '5792040474480061377';
-
-var picasaUrlBase = 'http://picasaweb.google.com/data/feed/api/user/' + userId + '/albumid/' + setId + '?';
-var picasaUrlCallback = '&callback=myFunction';
-var picasaUrlParams = 'kind=photo&thumbsize=75c&alt=json-in-script'
-                    + '&imgmax=d'
-                    + '&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))';
-*/
-
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?kind=photo&alt=json-in-script&callback=myFunction&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))
-
-
-
-
-
 window.currentPage = 1;
 
 var imagesLoaded = [];
@@ -61,16 +30,6 @@ function resetSizes() {
     //$("#wrapper").height(h);
     //$("#wrapper").width(w);
 
-    //postfix = '_b';
-    //return;
-    /*
-         if (size > 1024)   postfix = '_b';
-    else if (size > 800)    postfix = '_c';
-    else if (size > 640)    postfix = '_z';
-    else if (size > 500)    postfix = '';
-    else if (size > 320)    postfix = '_n';
-       else                 postfix = '_m';
-    */
          if (size > 1024)   postfix = '_b';
     else if (size > 800)    postfix = '_c';
     else if (size > 640)    postfix = '_z';
@@ -89,7 +48,6 @@ function resizeWrapper(width) {
 }
 
 function handleImageLoad() {
-    //console.debug('OK');
 
     var img = $( this );
     var imgWidth = img.width();
@@ -131,7 +89,6 @@ function handleImageLoad() {
 } // handleImageLoad
 
 function showImage(id, prevId, nextId) {
-    //console.debug( imagesLoadedHash[id], prevId, nextId );
     
     showSpinner();
 
@@ -206,9 +163,7 @@ $(function() {
         // NB! rand is not necessary, jQuery will pass own random string like: &_=1348912959589
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
             // New data
-            
-        //console.debug(data.photos.photo.length);
-        //console.debug(data);
+
             if (!data.photos || !data.photos.photo || !data.photos.photo.length)
                 return false;
 
@@ -228,12 +183,8 @@ $(function() {
                 items += strEl;
             }); // each
             
-            //console.debug(newIm, '-');
-
             if (newIm.length == 0)
                 return false;
-
-            //console.debug(newIm);
 
             imagesLoaded = newIm.concat(imagesLoaded);
             
@@ -256,16 +207,12 @@ $(function() {
 
     window.loadMore = setInterval(function() {
 
-        console.log('Loading more...');
-
         var rand = parseInt(Math.random()*100500);
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&rand='+rand+'&jsoncallback=?', function(data) {
             // More data
 
             if (!data.photos || !data.photos.photo || !data.photos.photo.length)
                 return false;
-
-            console.log('Page: ', window.currentPage, 'of... ', data.photos.pages);
 
             var items = '';
             $.each(data.photos.photo, function(i, p) {
@@ -285,16 +232,6 @@ $(function() {
             $('#container').append($items);
 
             updateNavigation();
-
-            //$('#carousel').elastislide( 'add', $items );
-
-            /*
-            if (data.photos.page < data.photos.pages) {
-                //data.photos.page
-                console.log('Loading Page ', data.photos.page + 1);
-                loadMore(++data.photos.page);
-            }
-            */
 
             // @todo Check total, not page!
             // @todo Check if loaded less than 25 items in page
@@ -321,8 +258,6 @@ $(function() {
 
 function jsonFlickrApi(data) {
 
-    console.debug(data);
-
     if (!data.photos || !data.photos.photo || !data.photos.photo.length)
         return false;
 
@@ -344,14 +279,6 @@ function jsonFlickrApi(data) {
 
     // Increment page
     window.currentPage++;
-
-    // not here
-    /*if (data.photos.page < data.photos.pages) {
-        loadMore(++data.photos.page);
-    }*/
-
-
-    console.log('total', data.photos.total);
 
 } // jsonFlickrApi
 
@@ -392,8 +319,6 @@ function getImgObj(p) {
 
 
 function updateNavigation() {
-    //return false;
-    console.log('Updating navigation');
 
     $container = $("#container");
 
