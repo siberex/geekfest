@@ -29,7 +29,7 @@ welcome_files:
 
 
 # Sessions.
-sessions_enabled: true
+#sessions_enabled: true
 
 
 # Configure java.util.logging.
@@ -37,36 +37,17 @@ system_properties:
   java.util.logging.config.file: WEB-INF/logging.properties
 
 
-# Set this only for production deploy:
-#env_variables:
-#  RINGO_ENV: production
-#  DEFAULT_ENCODING: UTF-8
-
-
 # Warmup requests, xmpp, mail.
-inbound_services:
-  - warmup
+#inbound_services:
+#  - warmup
 
 
 # Handlers section.
-# optlevel: -1 for run Rhino in interpreted mode
-# (faster spin-up, reduced memory usage, slower at runtime).
-# Modules and packages should be placed in ringo-home.
 handlers:
-  - url: /*
-    servlet: org.ringojs.jsgi.JsgiServlet
-    name: SibLi
-    init_params:
-      ringo-home: /
-      module-path: app
-# devel:
-      app: app
-      optlevel: -1
-# production:
-#      app: production
-#      production: true
-#      optlevel: 9
-#      optlevel: -1
+#  - url: /*
+#    jsp: /entry-point.jsp
+  - url: /auth
+    jsp: /auth.jsp
 
 
 # Static pages for critical error handling.
@@ -91,7 +72,11 @@ web_xml: |
     <extension>ico</extension>
     <mime-type>image/x-icon</mime-type>
   </mime-mapping>
-#  <error-page>
-#    <error-code>500</error-code>
-#    <location>/errors/servererror.jsp</location>
-#  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/500.jsp</location>
+  </error-page>
+  <error-page>
+    <error-code>404</error-code>
+    <location>/404.jsp</location>
+  </error-page>
