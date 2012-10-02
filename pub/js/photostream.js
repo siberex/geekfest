@@ -15,31 +15,47 @@ var postfix = '_b';
 
 
 
-// Picasa web albums API Reference:
-// https://developers.google.com/picasa-web/docs/2.0/reference
-// https://developers.google.com/picasa-web/docs/2.0/developers_guide_protocol#ListAlbumPhotos
 
-// User’s feed:
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com?alt=json&prettyprint=true&fields=entry(title,link)
-// Find album ID:
-// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5791956086207253009
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?alt=json&kind=photo
-// http://picasaweb.google.com/data/feed/api/user/110623282696383295866/albumid/5792040474480061377?kind=photo&thumbsize=72c&alt=json&max-results=2&imgmax=d&prettyprint=true
+var fbAppId = '499533806725155';
+// NB: Access token saved in /js/fb-token.js
+// access_token = '';
+
+
+// Facebook API, how to get album ID:
+// List all albums:
+// https://graph.facebook.com/siberex/albums/?fields=id,name,count&limit=0&access_token=...
+
+// https://graph.facebook.com/ALBUM_ID/photos
+// https://graph.facebook.com/4265070778154/photos?limit=25&access_token=...
+
+
+var fbAlbumId = '4259584921011';
+var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos';
+
 
 /*
-var userId = '110623282696383295866'; // 'siberex@gmail.com';
-var setId  = '5791956086207253009';
-var setId = '5792040474480061377';
-
-var picasaUrlBase = 'http://picasaweb.google.com/data/feed/api/user/' + userId + '/albumid/' + setId + '?';
-var picasaUrlCallback = '&callback=myFunction';
-var picasaUrlParams = 'kind=photo&thumbsize=75c&alt=json-in-script'
-                    + '&imgmax=d'
-                    + '&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))';
+{
+   "error": {
+      "message": "Error validating access token: Session has expired at unix time 1349042400. The current unix time is 1349042782.",
+      "type": "OAuthException",
+      "code": 190,
+      "error_subcode": 463
+   }
+}
+!!!
 */
 
-// http://picasaweb.google.com/data/feed/api/user/siberex@gmail.com/albumid/5791956086207253009?kind=photo&alt=json-in-script&callback=myFunction&hl=en_US&fields=entry(title,gphoto:numphotos,media:group(media:thumbnail))
 
+// &limit=2&offset=2
+
+var fbUrlSuffix = '&access_token=' + fbAccessToken + '&callback=parseFacebookData';
+
+
+
+function parseFacebookData(data) {
+    console.debug(data);
+
+} // parseFacebookData
 
 
 
@@ -61,16 +77,6 @@ function resetSizes() {
     //$("#wrapper").height(h);
     //$("#wrapper").width(w);
 
-    //postfix = '_b';
-    //return;
-    /*
-         if (size > 1024)   postfix = '_b';
-    else if (size > 800)    postfix = '_c';
-    else if (size > 640)    postfix = '_z';
-    else if (size > 500)    postfix = '';
-    else if (size > 320)    postfix = '_n';
-       else                 postfix = '_m';
-    */
          if (size > 1024)   postfix = '_b';
     else if (size > 800)    postfix = '_c';
     else if (size > 640)    postfix = '_z';
@@ -156,6 +162,21 @@ function showImage(id, prevId, nextId) {
 } // showImage
 
 
+// Facebook API.
+/*window.fbAsyncInit = function() {
+    FB.init({
+      //appId      : 'YOUR_APP_ID', // App ID
+      channelUrl : '//highload.sib.li/channel.html' // Channel File
+      ,status     : true // check login status
+      ,cookie     : true // enable cookies to allow the server to access the session
+      //,xfbml      : true  // parse XFBML
+    });
+
+    FB.api('/me', function(response) {
+      console.debug('Your name is ' + response.name);
+    });
+};*/
+
 
 
 $(function() {
@@ -163,7 +184,6 @@ $(function() {
 
     //updateNavigation();
         
-
 
 
 
