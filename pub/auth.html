@@ -13,7 +13,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta charset="utf-8" />
 
-  <title>FB retreive token</title>
+  <title>FB token retrieve</title>
 
 </head>
 <body>
@@ -21,11 +21,20 @@
 
 
 <script>
+var fbAppId = '499533806725155';
+
 if (window.location.hash.length == 0) {
 
+	top.location.href = "https://www.facebook.com/dialog/oauth?client_id=" + fbAppId
+					  + "&redirect_uri=" + top.location.href + "&scope=user_photos&response_type=token";
 
-
-
+} else {
+	console.debug(window.location.hash);
+	
+	var reMatchToken = /access_token=([^&]+)(?:&expires_in=(.*))?/;
+	var matches = window.location.hash.match(reMatchToken);
+	
+	top.location.href = "/auth?extend=" + matches[1];
 }
 
 </script>

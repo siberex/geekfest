@@ -2,10 +2,75 @@
 
 <%@ page import="java.net.MalformedURLException" %>
 <%@ page import="java.net.URL" %>
-<%@ page import="java.net.URI" %>
 <%@ page import="java.io.BufferedReader" %>
 <%@ page import="java.io.InputStreamReader" %>
 <%@ page import="java.io.IOException" %>
+<%@ page import="java.util.regex.Matcher" %>
+<%@ page import="java.util.regex.Pattern" %>
+
+<%
+	String appId = null;
+	String appSecret = null;
+%>
+<%@ include file="/config.jsp" %>
+<%
+	// Don’t forget to edit config and set actual App ID and App secret.
+	if ( appId == null || appSecret == null || appId.equals("") || appSecret.equals("") )
+		response.sendError(500, "Not specified App ID or App secret");
+
+	String fbLoginUrl = "http://www.facebook.com/dialog/oauth/?client_id=" + appId
+					  + "&scope=user_photos&redirect_uri=" + request.getRequestURL().toString();
+    
+	String fbResultCode  = request.getParameter("code");
+
+	// If user declines authorization request, error=access_denied 
+	String fbResultError = request.getParameter("error");
+	
+	// Authorization from client-side (see /pub/auth.html).
+	String tokenToExtend = request.getParameter("extend");
+
+
+	if (tokenToExtend != null) {
+
+		String fbExtendTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id=" + appId
+								+ "&client_secret=" + appSecret
+								+ "&grant_type=fb_exchange_token&fb_exchange_token=" + tokenToExtend;
+
+		String resultExt = pollUrl(fbExtendTokenUrl);
+
+		%>
+		EXTENDED TOKEN: <code><%= getToken(resultExt) %></code><br />
+		Valid for: <%= getTokenTime(resultExt) %> seconds.
+		<%
+
+	} else if (fbResultError != null) {
+
+		%>
+		<h3>Error: You have denied access</h3>
+		<%
+
+	} else if (fbResultCode != null) {
+		//Server-side request:
+
+		String fbGetTokenUrl = "https://graph.facebook.com/oauth/access_token?client_id=" + appId
+							 + "&client_secret=" + appSecret
+							 + "&code=" + fbResultCode
+							 + "&redirect_uri=" + request.getRequestURL().toString();
+
+		String result = pollUrl(fbGetTokenUrl);
+
+		//if (result != null) { ... }
+		%>
+		TOKEN: <code><%= getToken(result) %></code><br />
+		Valid for: <%= getTokenTime(result) %> seconds.
+		<%
+
+	} else {
+		%>
+		<script>top.location.href='<%= fbLoginUrl %>';</script>
+		<%
+	}
+%>
 
 
 <%!
@@ -28,84 +93,23 @@ public String pollUrl(String urlStr)
 		return null;
 	}
 } // pollUrl
-%>
 
+public String getToken(String data)
+{
+    Pattern pattern = Pattern.compile("access_token=([^&]+)(?:&expires=(.*))?");
+    Matcher matcher = pattern.matcher(data);
+	if ( !matcher.matches() )
+		return null;
+	return matcher.group(1);
+} // getToken
 
-<%
-
-	// FIXME: move to config
-	String appId	 = "499533806725155";
-	String appSecret = "";
-
-
-	String fbLoginUrl = "http://www.facebook.com/dialog/oauth/?client_id=" + appId
-					  + "&scope=user_photos&redirect_uri=" + request.getRequestURL().toString();
-    
-	// "<script>top.location.href='" + fbLoginUrl + "';</script>"
-
-	String fbResultCode  = request.getParameter("code");
-
-	// If user declines authorization request, error=access_denied 
-	String fbResultError = request.getParameter("error");
-
-
-	if (fbResultError != null) {
+public String getTokenTime(String data)
+{
+    Pattern pattern = Pattern.compile("access_token=([^&]+)&expires=(.*)");
+    Matcher matcher = pattern.matcher(data);
+	if ( !matcher.matches() )
+		return null;
+	return matcher.group(2);
+} // getTokenTime
 
 %>
-<h3>Error: You have denied access</h3>
-<%
-
-	} else if (fbResultCode != null) {
-		//Server-side request:
-
-		String fbGetTokenUrlString = "https://graph.facebook.com/oauth/access_token?client_id=" + appId
-								   + "&client_secret=" + appSecret
-								   + "&code=" + fbResultCode
-								   + "&redirect_uri=" + request.getRequestURL().toString();
-
-		String result = pollUrl(fbGetTokenUrlString);
-
-		/*
-		RESULT string:
-		access_token=USER_ACCESS_TOKEN&expires=NUMBER_OF_SECONDS_UNTIL_TOKEN_EXPIRES
-
-		OR json (if wrong code was passed):
-		{
-		   "error": {
-			  "type": "OAuthException",
-			  "message": "Error validating verification code."
-		   }
-		}
-		*/
-
-		if (result != null) {
-			URI uri = new URI(result);
-
-
-
-
-
-		}
-			%>
-RESPONSE: <%= result %>
-<br /><br />
-			<%
-
-
-
-
-%>
-CODE:<br /><%= fbResultCode %>
-<%
-
-	} else {
-%>
-OK: 
-
-<a href="<%= fbLoginUrl %>"><%= fbLoginUrl %></a>
-
-
-<%
-	}
-%>
-
