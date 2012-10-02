@@ -9,6 +9,7 @@ var perPage = '25';
 
 var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
               + 'flickr.photos.search&api_key=' + apiKey + '&user_id=' + userId
+              + '&sort=date-taken-desc'
               + '&tags=' + tag;
 
 var postfix = '_b';
@@ -159,9 +160,8 @@ $(function() {
 
         //return false;
 
-        var rand = parseInt(Math.random()*100500);
         // NB! rand is not necessary, jQuery will pass own random string like: &_=1348912959589
-        $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
+        $.getJSON(flickrUrl + '&per_page=' + perPage + '&jsoncallback=?', function(data) {
             // New data
 
             if (!data.photos || !data.photos.photo || !data.photos.photo.length)
@@ -207,8 +207,7 @@ $(function() {
 
     window.loadMore = setInterval(function() {
 
-        var rand = parseInt(Math.random()*100500);
-        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&rand='+rand+'&jsoncallback=?', function(data) {
+        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&jsoncallback=?', function(data) {
             // More data
 
             if (!data.photos || !data.photos.photo || !data.photos.photo.length)
