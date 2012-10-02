@@ -17,15 +17,15 @@ var postfix = '_b';
 
 
 var fbAppId = '499533806725155';
-// NB: Access token saved in /js/fb-token.js
 // access_token = '';
+// NB: Access token should be saved in /js/fb-token.js
 
 
 // Facebook API, how to get album ID:
 // List all albums:
 // https://graph.facebook.com/siberex/albums/?fields=id,name,count&limit=0&access_token=...
 
-// https://graph.facebook.com/ALBUM_ID/photos
+// https://graph.facebook.com/ALBUM_ID/photos?... e.g.:
 // https://graph.facebook.com/4265070778154/photos?limit=25&access_token=...
 
 
