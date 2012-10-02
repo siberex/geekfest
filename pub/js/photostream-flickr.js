@@ -9,6 +9,7 @@ var perPage = '25';
 
 var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
               + 'flickr.photos.search&api_key=' + apiKey + '&user_id=' + userId
+              + '&sort=date-taken-desc'
               + '&tags=' + tag;
 
 var postfix = '_b';
