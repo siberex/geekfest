@@ -8,15 +8,15 @@
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 
-<%
-	String appId = null;
-	String appSecret = null;
-%>
 <%@ include file="/config.jsp" %>
 <%
-	// Don’t forget to edit config and set actual App ID and App secret.
-	if ( appId == null || appSecret == null || appId.equals("") || appSecret.equals("") )
-		response.sendError(500, "Not specified App ID or App secret");
+	// Don’t forget to edit config.jsp and set actual App ID and App secret.
+	try {
+		if ( appId.equals("") || appSecret.equals("") )
+			response.sendError(500, "Not specified App ID or App secret");
+	} catch (IOException e) {
+		response.sendError(500, "Config file not present");
+	}
 
 	String fbLoginUrl = "http://www.facebook.com/dialog/oauth/?client_id=" + appId
 					  + "&scope=user_photos&redirect_uri=" + request.getRequestURL().toString();
