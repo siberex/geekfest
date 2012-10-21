@@ -16,9 +16,14 @@ var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
 var postfix = '_b';
 */
 
+if (console && console.log && !console.debug)
+	console.debug = console.log;
+if (!console || !console.debug)
+	console = { log: function(){}, debug: function(){} };
+
 
 var thumbWidth = 86;
-var thumbIndex = 7;
+//var thumbIndex = 7;
 
 window.currentPage = 1;
 
@@ -35,15 +40,23 @@ var fbAppId = '499533806725155';
 
 // Facebook API, how to get album ID:
 // List all albums:
+// https://graph.facebook.com/itsumma/albums/?fields=id,name,count&limit=0&access_token=...
 // https://graph.facebook.com/siberex/albums/?fields=id,name,count&limit=0&access_token=...
 
 // https://graph.facebook.com/ALBUM_ID/photos?... e.g.:
 // https://graph.facebook.com/4265070778154/photos?limit=25&access_token=...
 
 
-var fbAlbumId = '4318461272883';
-var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos';
+var fbAlbumId = '4318461272883'; // its → 513555281988573
 
+// How to use reverse sorting direction without FQL?
+// var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos/?order_by=created_time';
+// &limit=2&offset=2
+// More on Facebook pagination: http://developers.facebook.com/docs/reference/api/pagination/
+// &fields=id,picture,images,link,created_time
+
+var fbUrlPrefix = 'https://graph.facebook.com/fql?access_token=' + access_token
+				+ '&q=SELECT pid,link,created,src,src_width,src_height,images, src_big FROM photo WHERE album_object_id=' + fbAlbumId
 
 /*
 {
@@ -58,15 +71,15 @@ var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos';
 */
 
 
-// &limit=2&offset=2
 
-// More on Facebook pagination: http://developers.facebook.com/docs/reference/api/pagination/
+// FQL: 
+/*
+https://graph.facebook.com/fql?access_token=AAAHGUscaaCMBALk8XWM8RtbGzF7ETRI5kz04pRPQXZBoOmuQ3YkxzauoPWSaHDZAf406k5XQVwYXPEKAB69nX2x4GZBh3xuRoiXteaRLQZDZD&q=SELECT%20pid,link,created,%20src,src_width,src_height,%20images%20FROM%20photo%20WHERE%20album_object_id%20=%204318461272883%20ORDER%20BY%20created%20DESC%20LIMIT%200,20
+*/
 
-
-
-var fbUrlSuffix = '&access_token=' + access_token + '&callback=?';
-var fbUrlSuffixP = '&access_token=' + access_token + '&callback=prependFacebookData';
-var fbUrlSuffixA = '&access_token=' + access_token + '&callback=appendFacebookData';
+var fbUrlSuffix = ' ORDER BY created DESC LIMIT 0,20&callback=?';
+var fbUrlSuffixP = ' ORDER BY created DESC LIMIT 0,20&callback=prependFacebookData';
+var fbUrlSuffixA = ' ORDER BY created DESC LIMIT 0,20&callback=appendFacebookData';
 
 
 // Initial load and load more.
@@ -93,20 +106,41 @@ function addNewImages(data, insertAfter) {
 		return false;
 
 	var iData = null;
+	var removeIndexes = [];
+	var thumbsStr = '';
+
 	for (var i = 0; i < data.data.length; i++) {
 		iData = data.data[i];
 
+		if (imagesLoadedHash[iData.pid]) {
+			removeIndexes.push(i);
+			continue;
+		}
 
-		// iData.id
+		imagesLoadedHash[iData.pid] = iData;
+
+		thumbsStr += getThumbStr(iData);
+
+		// iData.pid
 		// iData.link
-		// iData.created_time
+		// iData.created
 		// iData.images
-
-		// iData.picture -- thumbnail
 
 		console.debug(iData);
 
 	}
+
+	for (var j = 0; j < removeIndexes.length; j++) {
+		// With delete() undefined will be left in array!
+		data.data.splice(removeIndexes[j], 1);
+	}
+	if (insertAfter) {
+		imagesLoaded = imagesLoaded.concat(data.data);
+	} else {
+		imagesLoaded = data.data.concat(imagesLoaded);
+	}
+
+	appendToNavigation(thumbsStr);
 
 } // parseFacebookData
 
@@ -176,12 +210,16 @@ function handleImageLoad() {
     }
 
     // box.addClass( 'darkbox-loaded' );
-
     // NOTE: we must show darkboxCanvas to compute dimensions right
-    img.width(imgWidth);
-    img.height(imgHeight);
+	//img.width(imgWidth);
+    //img.height(imgHeight);
+	
+	// This can be optimized by dynamically update <style>
+	//img.css('max-width', $(window).width() + 'px');
+	//img.css('max-height', ($(window).height() - thumbWidth) + 'px');
+
     $('#wrapper').width(imgWidth);
-    $('#wrapper').height(imgHeight);
+    //$('#wrapper').height(imgHeight);
     
     hideSpinner();
     img.show();
@@ -197,6 +235,9 @@ function showImage(id, prevId, nextId) {
 	var strNext = '<a href="#" id="next">→</a>';
     var $el = $(strEl + strPrev + strNext);
     var $img = $el.children('img:first');
+
+	$img.css('max-width', $(window).width() + 'px');
+	$img.css('max-height', ($(window).height() - thumbWidth - 1) + 'px');
 
     /*$img.on('load', function(e) {
         resizeWrapper( $('#wrapper img:first').width() );
@@ -410,24 +451,23 @@ function jsonFlickrApi(data) {
 
 } // jsonFlickrApi
 
-function getImageStr(im) {
-    //var pageUrl = 'http://www.flickr.com/photos/' + userId + '/' + im.id;
-    var pageUrl = 'http://www.flickr.com/photos/' + userUrl + '/' + im.id + '/in/set-' + setId;
-    
 
-    var strEl = '<a href="' + pageUrl + '" id="I'+im.id+'">'
-              + '<img src="'+im.url+postfix+'.jpg" alt="'+im.title+'" />'
+function getImageStr(im) {
+    var pageUrl = im.link;
+    
+    var strEl = '<a href="' + pageUrl + '" id="I' + im.pid + '">'
+              + '<img src="' + im.src_big + '" alt="" />'
               + '</a>';
     return strEl;
-} // getThumb
+} // getImageStr
+
 
 function getThumbStr(im) {
-	// im.images[thumbIndex].width, im.images[thumbIndex].height,
-    var strEl = '<li><a href="#" id="'+im.id+'">'
-              + '<img src="'+im.thumb+'" alt="'+im.title+'" width="'+thumbWidth+'" height="'+thumbWidth+'" />'
+    var strEl = '<li><a href="#'+im.pid+'" id="'+im.pid+'" style="background-image: url('+im.src+')">'
               + '</a></li>';
     return strEl;
-} // getThumb
+} // getThumbStr
+
 
 function getImgObj(p) {
     var url = 'http://farm' + p.farm + '.static.flickr.com/'
@@ -446,9 +486,18 @@ function getImgObj(p) {
 } // getImgObj
 
 
+function appendToNavigation(html) {
+	var $items  = $(html);
+	$('#container').append($items);
+	updateNavigation();
+}
+function prependToNavigation(html) {
+	var $items  = $(html);
+	$('#container').prepend($items);
+	updateNavigation();
+}
 
 function updateNavigation() {
-    //return false;
     //console.log('Updating navigation');
 
     $container = $("#container");

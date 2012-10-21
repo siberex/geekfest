@@ -24,6 +24,8 @@ body {
     background: -ms-radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* IE10 */
     background: radial-gradient(30% 30px, circle farthest-side, #FFF, #AAA); /* CSS3 */
 	min-height: 100%;
+
+	height: 100%; /* for image vertical alignment */
 }
 
 
@@ -41,13 +43,26 @@ body {
 #wrapper {
 	width: 250px;
 	margin: 0 auto;
-	vertical-align: middle;
+	/*vertical-align: middle;*/
 	text-align: center;
 	position: relative;
+
+	display: table; /* for image vertical alignment */
+	height: 100%; /* for image vertical alignment */
+}
+
+#wrapper a {
+	display: table-cell; /* for image vertical alignment */
+	padding-bottom: 87px; /* for image vertical alignment */
+	vertical-align: middle; /* for image vertical alignment */
+	box-sizing : border-box; /* !important */
+	-moz-box-sizing : border-box; /* !important */
+	-webkit-box-sizing : border-box; /* !important */
+	line-height: 0; /* !important */
 }
 
 #wrapper img {
-	display: none;
+	/* display: none; */
 }
 
 .renderer {
@@ -106,11 +121,17 @@ body {
 
 
 #navigation {
-	height			: 87px; // !
+	height			: 87px; /* ! */
 	width			: 100%;
 	position		: fixed;
 	bottom			: 0;
+	left			: 0; /* !important */
+	right			: 0; /* !important */
 	overflow		: hidden;
+
+
+
+	/*-moz-box-sizing: border-box;*/
 }
 
 #iscroll {
@@ -126,27 +147,38 @@ body {
 	text-align		: left;
 	display			: block;
 
-	height			: 86px; // !
+	height			: 86px; /* ! */
 	width			: 200%;
 	padding			: 0;
 	margin			: 0;
 }
 #iscroll ul li {
 	border-right	: 1px solid #CCC;
-	width			: 86px; // !
-	height			: 86px; // !
+	width			: 86px; /* ! */
+	height			: 86px; /* ! */
 	overflow		: hidden;
 	float			: left;
 	display			: block;
 	vertical-align	: middle;
+	overflow		: hidden;
 }
+#iscroll ul li a {
+	width			: 86px; /* ! */
+	height			: 86px; /* ! */
+	background-position: center center;
+	background-repeat: no-repeat;
+	display			: block;
+}
+
+/*
 #iscroll ul li img {
-	/*
-	width			: 75px;
-	height			: 75px;
-	*/
-	
+	display			: block;
+	margin			: auto;
+	|||width			: 75px;
+	|||height			: 75px;
 }
+*/
+
 
 #iscroll ul li:hover {
 	border-bottom	: 1px solid yellow;

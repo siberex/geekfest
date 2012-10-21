@@ -75,13 +75,23 @@
 <div id="navigation">
   <div id="iscroll">
     <ul id="container">
-
 	
 	</ul>
   </div>
 </div>
 
-<script>document.write('<script src="'+fbUrlPrefix+fbUrlSuffixA+'&rand='+(Math.random()*100500>>0)+'"><\/script>')</script>
+<script>
+if (window.location.hash.length) {
+	var id = window.location.hash.match(/\d+/g);
+	if (id) {
+		id = id[0];
+		var url = 'https://graph.facebook.com/'+id+'/&access_token='+access_token;
+
+	}
+} else {
+	document.write('<script src="'+fbUrlPrefix+fbUrlSuffixA+'&rand='+(Math.random()*100500>>0)+'"><\/script>')
+}
+</script>
 
 
 
