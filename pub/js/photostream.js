@@ -1,4 +1,6 @@
 // Flickr API
+
+/*
 var apiKey = 'ce8a98262233b4f93746d846725fe6bf';
 // http://www.adamwlewis.com/articles/what-is-my-flickr-id
 var userId = '54758632@N02';
@@ -12,6 +14,16 @@ var flickrUrl = 'http://api.flickr.com/services/rest/?format=json&method='
               + '&tags=' + tag;
 
 var postfix = '_b';
+*/
+
+
+var thumbWidth = 86;
+var thumbIndex = 7;
+
+window.currentPage = 1;
+
+var imagesLoaded = [];
+var imagesLoadedHash = {};
 
 
 
@@ -29,7 +41,7 @@ var fbAppId = '499533806725155';
 // https://graph.facebook.com/4265070778154/photos?limit=25&access_token=...
 
 
-var fbAlbumId = '4259584921011';
+var fbAlbumId = '4318461272883';
 var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos';
 
 
@@ -48,22 +60,60 @@ var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos';
 
 // &limit=2&offset=2
 
-var fbUrlSuffix = '&access_token=' + fbAccessToken + '&callback=parseFacebookData';
+// More on Facebook pagination: http://developers.facebook.com/docs/reference/api/pagination/
 
 
 
-function parseFacebookData(data) {
-    console.debug(data);
+var fbUrlSuffix = '&access_token=' + access_token + '&callback=?';
+var fbUrlSuffixP = '&access_token=' + access_token + '&callback=prependFacebookData';
+var fbUrlSuffixA = '&access_token=' + access_token + '&callback=appendFacebookData';
+
+
+// Initial load and load more.
+function appendFacebookData(data) {
+
+	return addNewImages(data, true);
+}
+
+// Interval update.
+function prependFacebookData(data) {
+
+	return addNewImages(data, false);
+}
+
+
+function addNewImages(data, insertAfter) {
+    //console.debug(data);
+	var insertAfter = (typeof insertAfter == 'undefined')
+					? false
+					: insertAfter;
+
+
+	if (!data || !data.data || !data.data.length)
+		return false;
+
+	var iData = null;
+	for (var i = 0; i < data.data.length; i++) {
+		iData = data.data[i];
+
+
+		// iData.id
+		// iData.link
+		// iData.created_time
+		// iData.images
+
+		// iData.picture -- thumbnail
+
+		console.debug(iData);
+
+	}
 
 } // parseFacebookData
 
 
 
 
-window.currentPage = 1;
 
-var imagesLoaded = [];
-var imagesLoadedHash = {};
 
 
 function resetSizes() {
@@ -85,7 +135,8 @@ function resetSizes() {
        else                 postfix = '_m';
 
 };
-//resetSizes();
+
+// Monitor window resize:
 $(window).resize(resetSizes);
 
 
@@ -108,7 +159,7 @@ function handleImageLoad() {
     }
 
     var boxWidth = $(window).width();
-    var boxHeight = $(window).height() - 76;
+    var boxHeight = $(window).height() - (thumbWidth + 1);
 
     // We must downsize the image when it is bigger than viewport
     if (
@@ -162,22 +213,6 @@ function showImage(id, prevId, nextId) {
 } // showImage
 
 
-// Facebook API.
-/*window.fbAsyncInit = function() {
-    FB.init({
-      //appId      : 'YOUR_APP_ID', // App ID
-      channelUrl : '//highload.sib.li/channel.html' // Channel File
-      ,status     : true // check login status
-      ,cookie     : true // enable cookies to allow the server to access the session
-      //,xfbml      : true  // parse XFBML
-    });
-
-    FB.api('/me', function(response) {
-      console.debug('Your name is ' + response.name);
-    });
-};*/
-
-
 
 $(function() {
     resetSizes();
@@ -220,7 +255,7 @@ $(function() {
     // Autoupdating
     window.loadNew = setInterval(function() {
 
-        //return false;
+        return false;
 
         var rand = parseInt(Math.random()*100500);
         // NB! rand is not necessary, jQuery will pass own random string like: &_=1348912959589
@@ -276,7 +311,8 @@ $(function() {
 
     window.loadMore = setInterval(function() {
 
-        console.log('Loading more...');
+        //console.log('Loading more...');
+		return false;
 
         var rand = parseInt(Math.random()*100500);
         $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&rand='+rand+'&jsoncallback=?', function(data) {
@@ -349,7 +385,6 @@ function jsonFlickrApi(data) {
 
     $.each(data.photos.photo, function(i, p) {
         var im = getImgObj(p);
-        //var im = getImgObj({"id":"8003949008", "owner":"54758632@N02", "secret":"3c77170355", "server":"8031", "farm":9, "title":"_SIB1270.JPG", "ispublic":1, "isfriend":0, "isfamily":0});
         imagesLoaded.push(im);
         imagesLoadedHash[p.id] = im;
 
@@ -387,8 +422,9 @@ function getImageStr(im) {
 } // getThumb
 
 function getThumbStr(im) {
+	// im.images[thumbIndex].width, im.images[thumbIndex].height,
     var strEl = '<li><a href="#" id="'+im.id+'">'
-              + '<img src="'+im.thumb+'" alt="'+im.title+'" width="75" height="75" />'
+              + '<img src="'+im.thumb+'" alt="'+im.title+'" width="'+thumbWidth+'" height="'+thumbWidth+'" />'
               + '</a></li>';
     return strEl;
 } // getThumb
@@ -413,11 +449,12 @@ function getImgObj(p) {
 
 function updateNavigation() {
     //return false;
-    console.log('Updating navigation');
+    //console.log('Updating navigation');
 
     $container = $("#container");
 
-    var width = $container.children('li').length * 76;
+    var width = $container.children('li').length * (thumbWidth + 1);
+	// Set fixed width for thumbnail container (important!):
     $container.width(width);
 
     if (window.navScroll) {
