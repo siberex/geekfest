@@ -78,20 +78,49 @@ https://graph.facebook.com/fql?access_token=AAAHGUscaaCMBALk8XWM8RtbGzF7ETRI5kz0
 */
 
 var fbUrlSuffix = ' ORDER BY created DESC LIMIT 0,20&callback=?';
+var fbUrlSuffixI = ' ORDER BY created DESC LIMIT 20,20&callback=initFacebookData'; ///////////////// NB!!!!!!!!!!!!!
 var fbUrlSuffixP = ' ORDER BY created DESC LIMIT 0,20&callback=prependFacebookData';
-var fbUrlSuffixA = ' ORDER BY created DESC LIMIT 0,20&callback=appendFacebookData';
+var fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=appendFacebookData';
 
 
-// Initial load and load more.
+
+// Initial load.
+function initFacebookData(data) {
+	var loaded = addNewImages(data, true);
+
+	if (!loaded.length) {
+		console.debug('Error while loading album data!');
+		return null;
+	}
+
+    showImage(loaded[0].pid, null, loaded[1] ? loaded[1].pid : null);
+
+    // Increment page
+    window.currentPage++;
+}
+
+
+// Load more from album.
 function appendFacebookData(data) {
 
-	return addNewImages(data, true);
+	var loaded = addNewImages(data, true);
+
+	window.currentPage++;
+	fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=appendFacebookData';
 }
+
 
 // Interval update.
 function prependFacebookData(data) {
 
-	return addNewImages(data, false);
+	var loaded = addNewImages(data, false);
+
+	if (!loaded.length)
+		return null;
+
+	var first = loaded[0];
+	if ( $('#wrapper a:first').attr('id') == 'I' + first.pid )
+		showImage(loaded[0].pid, null, loaded[1] ? loaded[1].pid : null);
 }
 
 
@@ -121,27 +150,23 @@ function addNewImages(data, insertAfter) {
 
 		thumbsStr += getThumbStr(iData);
 
-		// iData.pid
-		// iData.link
-		// iData.created
-		// iData.images
-
-		console.debug(iData);
-
+		//console.debug(iData);
 	}
 
 	for (var j = 0; j < removeIndexes.length; j++) {
 		// With delete() undefined will be left in array!
 		data.data.splice(removeIndexes[j], 1);
 	}
+
 	if (insertAfter) {
 		imagesLoaded = imagesLoaded.concat(data.data);
+		appendToNavigation(thumbsStr);
 	} else {
 		imagesLoaded = data.data.concat(imagesLoaded);
+		prependToNavigation(thumbsStr);
 	}
 
-	appendToNavigation(thumbsStr);
-
+	return data.data;
 } // parseFacebookData
 
 
@@ -149,7 +174,7 @@ function addNewImages(data, insertAfter) {
 
 
 
-
+// @deprecated
 function resetSizes() {
     var h = $(window).height();
     var w = $(window).width();
@@ -174,7 +199,7 @@ function resetSizes() {
 $(window).resize(resetSizes);
 
 
-
+// @deprecated
 function resizeWrapper(width) {
     //$('#wrapper').width(width);
 }
@@ -295,60 +320,9 @@ $(function() {
 
     // Autoupdating
     window.loadNew = setInterval(function() {
-
-        return false;
-
-        var rand = parseInt(Math.random()*100500);
-        // NB! rand is not necessary, jQuery will pass own random string like: &_=1348912959589
-        $.getJSON(flickrUrl + '&per_page=' + perPage + '&rand='+rand+'&jsoncallback=?', function(data) {
-            // New data
-            
-        //console.debug(data.photos.photo.length);
-        //console.debug(data);
-            if (!data.photos || !data.photos.photo || !data.photos.photo.length)
-                return false;
-
-            var first = imagesLoaded[0];
-            var newIm = [];
-            var items = '';
-            $.each(data.photos.photo, function(i, p) {
-                if ( typeof imagesLoadedHash[p.id] == 'object' )
-                    return 1;
-
-                var im = getImgObj(p);
-                
-                newIm.push(im);
-                imagesLoadedHash[p.id] = im;
-
-                var strEl = getThumbStr(im);
-                items += strEl;
-            }); // each
-            
-            //console.debug(newIm, '-');
-
-            if (newIm.length == 0)
-                return false;
-
-            //console.debug(newIm);
-
-            imagesLoaded = newIm.concat(imagesLoaded);
-            
-            var $items  = $(items);
-            $('#container').prepend($items);
-            setTimeout(function () {
-                window.navScroll.refresh();
-            }, 0);
-            //$('#carousel').elastislide( 'add', $items );
-            
-            if ($('#wrapper a:first').attr('id') == 'I' + first.id )
-                showImage(newIm[0].id, null, newIm[1] ? newIm[1].id : null);
-        }); 
+        $.getJSON(fbUrlPrefix + fbUrlSuffix, prependFacebookData);
+    }, 5000);
     
-    }, 120000);
-    
-//window.loadMore = function(page) {
-
-    //return false;
 
     window.loadMore = setInterval(function() {
 
@@ -356,55 +330,8 @@ $(function() {
 		return false;
 
         var rand = parseInt(Math.random()*100500);
-        $.getJSON(flickrUrl + '&per_page=' + perPage + '&page=' + window.currentPage + '&rand='+rand+'&jsoncallback=?', function(data) {
-            // More data
-
-            if (!data.photos || !data.photos.photo || !data.photos.photo.length)
-                return false;
-
-            console.log('Page: ', window.currentPage, 'of... ', data.photos.pages);
-
-            var items = '';
-            $.each(data.photos.photo, function(i, p) {
-                if ( typeof imagesLoadedHash[p.id] == 'object' )
-                    return 1;
-
-                var im = getImgObj(p);
-
-                imagesLoaded.push(im);
-                imagesLoadedHash[p.id] = im;
-
-                var strEl = getThumbStr(im);
-                items += strEl;
-            }); // each
-            
-            var $items  = $(items);
-            $('#container').append($items);
-
-            updateNavigation();
-
-            //$('#carousel').elastislide( 'add', $items );
-
-            /*
-            if (data.photos.page < data.photos.pages) {
-                //data.photos.page
-                console.log('Loading Page ', data.photos.page + 1);
-                loadMore(++data.photos.page);
-            }
-            */
-
-            // @todo Check total, not page!
-            // @todo Check if loaded less than 25 items in page
-            // Less than {perPage} items can be loaded on last page AND...
-            // Flickr API sometimes gives less than 25 on other pages randomly!
-            if (window.currentPage >= data.photos.pages) {
-                clearInterval(window.loadMore);
-            } else {
-                window.currentPage++;
-            }
-        }); // json
-    }, 5000); // setInterval
-//}; // loadMore
+        $.getJSON(fbUrlPrefix + fbUrlSuffixA); // json
+    }, 7000); // setInterval
 
 
 
@@ -413,43 +340,6 @@ $(function() {
 }); // document.ready
 
 
-
-
-
-function jsonFlickrApi(data) {
-
-    console.debug(data);
-
-    if (!data.photos || !data.photos.photo || !data.photos.photo.length)
-        return false;
-
-
-    $.each(data.photos.photo, function(i, p) {
-        var im = getImgObj(p);
-        imagesLoaded.push(im);
-        imagesLoadedHash[p.id] = im;
-
-        var strEl = getThumbStr(im);
-
-        $(strEl).appendTo("#container");
-    }); // each
-
-    showImage(imagesLoaded[0].id, null, imagesLoaded[1] ? imagesLoaded[1].id : null);
-
-    updateNavigation();
-
-    // Increment page
-    window.currentPage++;
-
-    // not here
-    /*if (data.photos.page < data.photos.pages) {
-        loadMore(++data.photos.page);
-    }*/
-
-
-    console.log('total', data.photos.total);
-
-} // jsonFlickrApi
 
 
 function getImageStr(im) {
@@ -468,22 +358,6 @@ function getThumbStr(im) {
     return strEl;
 } // getThumbStr
 
-
-function getImgObj(p) {
-    var url = 'http://farm' + p.farm + '.static.flickr.com/'
-            + p.server + '/' + p.id + '_' + p.secret;            
-    
-    var thumb = url + '_s.jpg';
-    var title = p.title;
-
-    var im = {
-        id      : p.id,
-        url     : url,
-        thumb   : thumb,
-        title   : title
-    };
-    return im;
-} // getImgObj
 
 
 function appendToNavigation(html) {
