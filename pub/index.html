@@ -82,14 +82,28 @@
 
 <script>
 if (window.location.hash.length) {
-	var id = window.location.hash.match(/\d+/g);
-	if (id) {
-		var pid = id[0];
+	//var id = window.location.hash.match(/\d+/g);
+	var id = window.location.hash.split('#');
+	if (id && id[1]) {
+		//var pid = id[0];
+		var pid = id[1];
 		var url = 'https://graph.facebook.com/fql?access_token='+access_token
 				+ '&q=SELECT pid,link,created,src,src_width,src_height,images, src_big FROM photo WHERE pid=' + pid;
 
 		$.getJSON(url + '&callback=?', function(data) {
-		
+			if (!data || !data.data || !data.data.length)
+				return false;
+
+			var iData = data.data[0];
+
+			if (imagesLoadedHash[iData.pid]) {
+				//
+			} else {
+				imagesLoadedHash[iData.pid] = iData;
+				imagesLoaded.push(iData);
+			}
+
+			showImage(iData.pid, null, null);
 		});
 	}
 }
