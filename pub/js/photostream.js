@@ -25,7 +25,7 @@ if (!console || !console.debug)
 var thumbWidth = 86;
 //var thumbIndex = 7;
 
-window.currentPage = 1;
+window.currentPage = 0;
 
 var imagesLoaded = [];
 var imagesLoadedHash = {};
@@ -47,7 +47,7 @@ var fbAppId = '499533806725155';
 // https://graph.facebook.com/4265070778154/photos?limit=25&access_token=...
 
 
-var fbAlbumId = '4318461272883'; // its → 513555281988573
+var fbAlbumId = '513555281988573'; // its → 513555281988573
 
 // How to use reverse sorting direction without FQL?
 // var fbUrlPrefix = 'https://graph.facebook.com/' + fbAlbumId + '/photos/?order_by=created_time';
@@ -78,9 +78,9 @@ https://graph.facebook.com/fql?access_token=AAAHGUscaaCMBALk8XWM8RtbGzF7ETRI5kz0
 */
 
 var fbUrlSuffix = ' ORDER BY created DESC LIMIT 0,20&callback=?';
-var fbUrlSuffixI = ' ORDER BY created DESC LIMIT 20,20&callback=initFacebookData'; ///////////////// NB!!!!!!!!!!!!!
-var fbUrlSuffixP = ' ORDER BY created DESC LIMIT 0,20&callback=prependFacebookData';
-var fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=appendFacebookData';
+var fbUrlSuffixI = ' ORDER BY created DESC LIMIT 0,20&callback=initFacebookData';
+//var fbUrlSuffixP = ' ORDER BY created DESC LIMIT 0,20&callback=prependFacebookData';
+var fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=?';
 
 
 
@@ -93,10 +93,12 @@ function initFacebookData(data) {
 		return null;
 	}
 
-    showImage(loaded[0].pid, null, loaded[1] ? loaded[1].pid : null);
+	var first = loaded[0];
+	if ( !$('#wrapper a:first').attr('id') || $('#wrapper a:first').attr('id') == ('I' + first.pid) )
+		showImage(loaded[0].pid, null, loaded[1] ? loaded[1].pid : null);
 
     // Increment page
-    window.currentPage++;
+	window.currentPage++;
 }
 
 
@@ -105,21 +107,23 @@ function appendFacebookData(data) {
 
 	var loaded = addNewImages(data, true);
 
+	console.debug(window.currentPage, 'page');
+
+    // Increment page
 	window.currentPage++;
-	fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=appendFacebookData';
+	fbUrlSuffixA = ' ORDER BY created DESC LIMIT ' + ((window.currentPage-1)*20) + ',20&callback=?';
 }
 
 
 // Interval update.
 function prependFacebookData(data) {
-
 	var loaded = addNewImages(data, false);
 
 	if (!loaded.length)
 		return null;
 
 	var first = loaded[0];
-	if ( $('#wrapper a:first').attr('id') == 'I' + first.pid )
+	if ( $('#wrapper a:first').attr('id') == ('I' + first.pid) )
 		showImage(loaded[0].pid, null, loaded[1] ? loaded[1].pid : null);
 }
 
@@ -321,17 +325,14 @@ $(function() {
     // Autoupdating
     window.loadNew = setInterval(function() {
         $.getJSON(fbUrlPrefix + fbUrlSuffix, prependFacebookData);
-    }, 5000);
+    }, 120000);
     
 
     window.loadMore = setInterval(function() {
 
         //console.log('Loading more...');
-		return false;
-
-        var rand = parseInt(Math.random()*100500);
-        $.getJSON(fbUrlPrefix + fbUrlSuffixA); // json
-    }, 7000); // setInterval
+        $.getJSON(fbUrlPrefix + fbUrlSuffixA, appendFacebookData); // json
+    }, 10000); // setInterval
 
 
 
