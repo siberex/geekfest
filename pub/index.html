@@ -88,7 +88,7 @@ if (window.location.hash.length) {
 		//var pid = id[0];
 		var pid = id[1];
 		var url = 'https://graph.facebook.com/fql?access_token='+access_token
-				+ '&q=SELECT pid,link,created,src,src_width,src_height,images, src_big FROM photo WHERE pid=' + pid;
+				+ '&q=SELECT pid,link,created,src,src_width,src_height,images, src_big FROM photo WHERE pid="' + pid + '"';
 
 		$.getJSON(url + '&callback=?', function(data) {
 			if (!data || !data.data || !data.data.length)
