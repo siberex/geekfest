@@ -46,8 +46,12 @@ system_properties:
 handlers:
 #  - url: /*
 #    jsp: /entry-point.jsp
+  - url: /getip
+    jsp: /getip.jsp
+    secure: optional
   - url: /auth
     jsp: /auth.jsp
+    secure: optional
 
 
 # Static pages for critical error handling.

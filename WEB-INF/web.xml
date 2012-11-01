@@ -1,6 +1,14 @@
 <!-- Generated from app.yaml. Do not edit. -->
 <web-app version='2.5' xmlns='http://java.sun.com/xml/ns/javaee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd'>
   <servlet>
+    <servlet-name>/getip.jsp</servlet-name>
+    <jsp-file>/getip.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>/getip.jsp</servlet-name>
+    <url-pattern>/getip</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>/auth.jsp</servlet-name>
     <jsp-file>/auth.jsp</jsp-file>
   </servlet>
